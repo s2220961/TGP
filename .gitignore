@@ -1,0 +1,18 @@
+# This line of code ignore everything in `Name_of_folder_containing_data_of_observation`
+observation_data/
+
+
+# Ignore .env file
+# .env
+
+# Ignore all `.log` files
+# *.log
+
+# Ignore `venv` or virtual environment directories
+# venv/
+
+# Ignore `.DS_Store` (common on macOS)
+# .DS_Store
+
+# Ignore Python cache files
+# __pycache__/
