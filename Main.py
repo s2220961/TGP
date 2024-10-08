@@ -7,6 +7,8 @@ import matplotlib.patches as mpatches
 import scipy as scipy
 import os
 
+# Have a look at README.MD before replacing the base_dir to make sure your folder has the same structure. This code is built for only that kind of structure
+# This gives the directory to your data folder. Please replace it with your own folder directory
 base_dir = 'G:\MyProject\TGP\observation_data'
 
 fits_data = {
