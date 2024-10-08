@@ -7,43 +7,42 @@ You can add the observation data folder into the same file path where your clone
 
 ## Your local folder structure for observation data should look like this. The code won't work if the directory of the folders is not the same.
 
-📁 calibration_data
-├── 📁 Calibration
-│   ├── 📁 Bias
-│   ├── 📁 Dark
-│   └── 📁 Flats
-├── 📁 M52
-│   ├── 📁 B-band
-│   ├── 📁 U-band
-│   └── 📁 V-band
-├── 📁 NGC7789
-│   ├── 📁 B-band
-│   ├── 📁 U-band
-│   └── 📁 V-band
-├── 📁 Standard Star 1
-│   ├── 📁 B-band
-│   │   ├── 📁 First observation
-│   │   ├── 📁 Second observation
-│   │   └── 📁 Third observation
-│   ├── 📁 U-band
-│   │   ├── 📁 First observation
-│   │   ├── 📁 Second observation
-│   │   └── 📁 Third observation
-│   └── 📁 V-band
-│       ├── 📁 First observation
-│       ├── 📁 Second observation
-│       └── 📁 Third observation
-└── 📁 Standard Star 2
-    ├── 📁 B-band
-    │   ├── 📁 First observation
-    │   ├── 📁 Second observation
-    │   └── 📁 Third observation
-    ├── 📁 U-band
-    │   ├── 📁 First observation
-    │   ├── 📁 Second observation
-    │   └── 📁 Third observation
-    └── 📁 V-band
-        ├── 📁 First observation
-        ├── 📁 Second observation
-        └── 📁 Third observation
-
+📁 calibration_data  
+├── 📁 Calibration  
+│   ├── 📁 Bias  
+│   ├── 📁 Dark  
+│   └── 📁 Flats  
+├── 📁 M52  
+│   ├── 📁 B-band  
+│   ├── 📁 U-band  
+│   └── 📁 V-band  
+├── 📁 NGC7789  
+│   ├── 📁 B-band  
+│   ├── 📁 U-band  
+│   └── 📁 V-band  
+├── 📁 Standard Star 1  
+│   ├── 📁 B-band  
+│   │   ├── 📁 First observation  
+│   │   ├── 📁 Second observation  
+│   │   └── 📁 Third observation  
+│   ├── 📁 U-band  
+│   │   ├── 📁 First observation  
+│   │   ├── 📁 Second observation  
+│   │   └── 📁 Third observation  
+│   └── 📁 V-band  
+│       ├── 📁 First observation  
+│       ├── 📁 Second observation  
+│       └── 📁 Third observation  
+└── 📁 Standard Star 2  
+    ├── 📁 B-band  
+    │   ├── 📁 First observation  
+    │   ├── 📁 Second observation  
+    │   └── 📁 Third observation  
+    ├── 📁 U-band  
+    │   ├── 📁 First observation  
+    │   ├── 📁 Second observation  
+    │   └── 📁 Third observation  
+    └── 📁 V-band  
+        ├── 📁 First observation  
+        ├── 📁 Second observation  
+        └── 📁 Third observation  
