@@ -30,9 +30,9 @@ You can add the observation data folder into the same file path where your clone
 │   │   ├── 📁 Second observation  
 │   │   └── 📁 Third observation  
 │   └── 📁 V-band  
-│       ├── 📁 First observation  
-│       ├── 📁 Second observation  
-│       └── 📁 Third observation  
+│       - 📁 First observation  
+│       - 📁 Second observation  
+│       - 📁 Third observation  
 └── 📁 Standard Star 2  
     ├── 📁 B-band  
     │   ├── 📁 First observation  
@@ -43,6 +43,6 @@ You can add the observation data folder into the same file path where your clone
     │   ├── 📁 Second observation  
     │   └── 📁 Third observation  
     └── 📁 V-band  
-        ├── 📁 First observation  
-        ├── 📁 Second observation  
-        └── 📁 Third observation  
+        - 📁 First observation  
+        - 📁 Second observation  
+        - 📁 Third observation  
