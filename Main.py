@@ -47,6 +47,6 @@ for star in ['Standard Star 1', 'Standard Star 2']:
             fits_data[star][band].extend(load_fits_files(dir_path))
 
 
-
+#Example of taking the first data in V-band for M52
 m52_v_band_data = fits_data['M52']['V-band'][0]
 print(m52_v_band_data)
