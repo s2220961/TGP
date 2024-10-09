@@ -1,3 +1,7 @@
+''' UNFINIHSED: MASTER FLATS ARE NOT PLOTTING CORRECTLY '''
+''' Should be fixed soon as they are working on a different script but had to change code,
+    so they used the data from the OneDrive '''
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt
