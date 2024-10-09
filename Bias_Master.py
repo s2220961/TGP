@@ -1,3 +1,6 @@
+''' WORKS AS INTENDED '''
+''' The script processes all of our Bias frame files, creates and then plots the Master '''
+
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
