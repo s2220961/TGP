@@ -7,7 +7,10 @@ import matplotlib.patches as mpatches
 import scipy as scipy
 import os
 
+# Have a look at README.MD before replacing the base_dir to make sure your folder has the same structure. This code is built for only that kind of structure
+# This gives the directory to your data folder. Please replace it with your own folder directory
 base_dir = 'G:\MyProject\TGP\observation_data'
+
 
 fits_data = {
     'Calibration': {},
@@ -27,19 +30,17 @@ def load_fits_files(directory):
             fits_files.append(data)
     return fits_files
 
-# Load Calibration data, including handling subfolders inside the 'Flats' folder
+# Load Calibration data for Bias, Dark, and Flats
 for cal_type in ['Bias', 'Dark', 'Flats']:
     dir_path = os.path.join(base_dir, 'Calibration', cal_type)
 
     if cal_type == 'Flats':
-        # If we are in the 'Flats' folder, handle its subfolders (e.g., B-Band, Halpha, etc.)
         flats_subfolders = ['B-Band', 'Halpha', 'OIII', 'R-Band', 'SII', 'V-Band']
-        fits_data['Calibration']['Flats'] = {}  # Initialize Flats subfolder data
+        fits_data['Calibration']['Flats'] = {}  
         for subfolder in flats_subfolders:
             subfolder_path = os.path.join(dir_path, subfolder)
             fits_data['Calibration']['Flats'][subfolder] = load_fits_files(subfolder_path)
     else:
-        # For Bias and Dark, load files directly
         fits_data['Calibration'][cal_type] = load_fits_files(dir_path)
 
 # Load data for M52, NGC7789
