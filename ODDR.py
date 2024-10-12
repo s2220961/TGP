@@ -54,11 +54,11 @@ def divide_flat(fits_data, master_flat):
 
 # Subtract master bias and divide by all master flats for each band and object
 for obj_name in ['M52', 'NGC7789', 'Standard Star 1', 'Standard Star 2']:
-    for band in ['B-band', 'U-band', 'V-band']:  # Using the correct lowercase keys for your objects
+    for band in ['B-band', 'U-band', 'V-band']:  l
         fits_data[obj_name][band] = subtract_bias(fits_data[obj_name][band], master_bias)  # Subtract master bias
         flat_bands_map = {                                                                 # Divide 
             'B-band': 'B-Band',
-            'U-band': 'Halpha', 
+            'U-band': 'U-band', 
             'V-band': 'V-Band'
         }
         
