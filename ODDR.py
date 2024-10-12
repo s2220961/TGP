@@ -71,10 +71,6 @@ for obj_name in ['M52', 'NGC7789', 'Standard Star 1', 'Standard Star 2']:
 
 # print(fits_data['M52']['V-band'][0])
 
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib import colors
-
 # Function to plot reduced FITS data with a colorbar
 def plot_reduced_data_with_colorbar(reduced_data, title):
     if reduced_data is not None and len(reduced_data) > 0:
