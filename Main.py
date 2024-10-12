@@ -60,8 +60,8 @@ for star in ['Standard Star 1', 'Standard Star 2']:
 
 
 # Example on how to fetch the data . In this example, I want to fecth the first data in V-band for M52 and Flats B-Band
-m52_b_band_data = fits_data['M52']['B-band']
-print(m52_b_band_data)
+# m52_b_band_data = fits_data['M52']['B-band']
+# print(m52_b_band_data)
 
-flats_b_band_data = fits_data['Calibration']['Flats']['B-Band'][5]
-print(flats_b_band_data)
+# flats_b_band_data = fits_data['Calibration']['Flats']['B-Band'][5]
+# print(flats_b_band_data)
