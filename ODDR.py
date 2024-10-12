@@ -87,4 +87,5 @@ def plot_reduced_data_with_colorbar(reduced_data, title):
     else:
         print(f"No valid data to plot for {title}")
 
-plot_reduced_data_with_colorbar(fits_data['M52']['B-band'], 'M52 B-band Reduced Data')
+
+plot_reduced_data_with_colorbar(fits_data['M52']['B-band'], 'M52 B-band Reduced Data') #Second variable is the title
