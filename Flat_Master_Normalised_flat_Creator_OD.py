@@ -4,9 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from astropy.io import fits
 from matplotlib import ticker
-
-# Import fits_data from Main.py
-from Main import fits_data
+from Main import fits_data # Import fits_data from Main.py
 
 # Function to read FITS files from a given directory and add data to a list
 def load_fits_files(directory):
@@ -40,8 +38,8 @@ def process_flats_and_save(flat_files, output_file):
         return None
 
     master_flat = np.median(normalized_flats, axis=0)
-    output_dir = os.path.dirname(output_file)
     
+    output_dir = os.path.dirname(output_file)
     if not os.path.exists(output_dir):
         try:
             os.makedirs(output_dir)
@@ -49,14 +47,13 @@ def process_flats_and_save(flat_files, output_file):
         except OSError as e:
             print(f"Error creating directory {output_dir}: {e}")
             return
-
+            
     try:
         hdu = fits.PrimaryHDU(master_flat)
         hdu.writeto(output_file, overwrite=True)
         print(f"Master flat saved to: {output_file}")
     except Exception as e:
         print(f"Error saving file {output_file}: {e}")
-
     return master_flat  # Return the master flat for plotting
 
 # Function to plot the master flat with enhanced contrast and color scaling
@@ -74,8 +71,12 @@ def plot_master_flat(master_flat, title):
         print(f"No master flat to plot for {title}")
 
 # Process and save master flats for each filter
-output_base_dir = 'G:\\MyProject\\TGP\\data_reduction\\Flats\\Master'
-for filter_name, flat_data in fits_data['Calibration']['Flats'].items():
-    output_path = os.path.join(output_base_dir, f'Master_Flat_{filter_name}.fits')
-    master_flat = process_flats_and_save(flat_data, output_path)
-    plot_master_flat(master_flat, f'Master Flat for {filter_name} Band')
+def create_and_plot_master_flats():
+    output_base_dir = 'G:\\MyProject\\TGP\\data_reduction\\Flats\\Master'
+    for filter_name, flat_data in fits_data['Calibration']['Flats'].items():
+        output_path = os.path.join(output_base_dir, f'Master_Flat_{filter_name}.fits')
+        master_flat = process_flats_and_save(flat_data, output_path)
+        plot_master_flat(master_flat, f'Master Flat for {filter_name} Band')
+
+'''Please uncomment the code below to run the plot. I put a comment on the code below because Idont want it to run when I run the script'''
+# create_and_plot_master_flats()
