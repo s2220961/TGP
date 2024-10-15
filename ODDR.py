@@ -15,8 +15,14 @@ import numpy as np
 from matplotlib import colors
 
 
-# Directory where the master flats are stored
 master_flats_dir = 'G:\\MyProject\\TGP\\data_reduction\\Flats\\Master'
+
+reduced_image_dir = 'G:\\MyProject\\TGP\\data_reduction\\Reduced Image'  # Directory where the processed (reduced) FITS files will be saved
+
+# Create the directory for reduced image if it doesn't exist (We want to save the reduced images here)
+if not os.path.exists(reduced_image_dir):
+    os.makedirs(reduced_image_dir)
+
 
 # Function to load the master flat for a given band from the directory
 def load_master_flat(band):
@@ -32,7 +38,7 @@ def load_master_flat(band):
 master_flats = {}
 
 # Load the master flats into the dictionary for each available type from your image
-filter_types = ['B-Band', 'Halpha', 'OIII', 'R-Band', 'SII', 'V-Band']
+filter_types = ['B-Band', 'U-Band', 'V-Band']
 for filter_type in filter_types:
     master_flat = load_master_flat(filter_type)
     if master_flat is not None:
@@ -40,9 +46,9 @@ for filter_type in filter_types:
 
 # Function to subtract master bias from FITS data
 def subtract_bias(fits_data, master_bias):
-    master_bias = master_bias.astype(np.float32)  # Convert to float32 to reduce memory usage
+    master_bias = master_bias.astype(np.float32)  # Convert to float32 to reduce memory usage, this is important for large data to prevent memory errors
     result = [lights_data.astype(np.float32) - master_bias for lights_data in fits_data]
-    gc.collect()  # Force garbage collection to free memory
+    gc.collect()  # Force garbage collection to free memory, I recommend using this after large operations to free up memory
     return result
 
 # Function to divide FITS data by a master flat
@@ -52,40 +58,48 @@ def divide_flat(fits_data, master_flat):
     gc.collect()
     return result
 
-# Subtract master bias and divide by all master flats for each band and object
+processed_data = {}
+
+# Subtract master bias and divide by its respective master flat for each band and object
 for obj_name in ['M52', 'NGC7789', 'Standard Star 1', 'Standard Star 2']:
-    for band in ['B-band', 'U-band', 'V-band']:  l
-        fits_data[obj_name][band] = subtract_bias(fits_data[obj_name][band], master_bias)  # Subtract master bias
-        flat_bands_map = {                                                                 # Divide 
+    processed_data[obj_name] = {}  
+
+    for band in ['B-band', 'U-band', 'V-band']:  
+        processed_data[obj_name][band] = [] 
+
+        fits_data[obj_name][band] = subtract_bias(fits_data[obj_name][band], master_bias)
+
+        # This check if the correct flat is used for each band
+        flat_bands_map = {                                                                 
             'B-band': 'B-Band',
-            'U-band': 'U-band', 
+            'U-band': 'U-Band',
             'V-band': 'V-Band'
         }
-        
-        for flat_band_key in flat_bands_map:
-            if flat_bands_map[flat_band_key] in master_flats:  # Ensure master flat exists
-                fits_data[obj_name][band] = divide_flat(fits_data[obj_name][band], master_flats[flat_bands_map[flat_band_key]])
-                print(f"Divided {obj_name} {band} by {flat_bands_map[flat_band_key]} master flat.")
-            else:
-                print(f"Master flat {flat_bands_map[flat_band_key]} not found, skipping flat-field correction.")
 
-# print(fits_data['M52']['V-band'][0])
+        # Check if the corresponding master flat for the current band exists
+        if flat_bands_map[band] in master_flats: 
+            fits_data[obj_name][band] = divide_flat(fits_data[obj_name][band], master_flats[flat_bands_map[band]])
+            print(f"Divided {obj_name} {band} by {flat_bands_map[band]} master flat.")
+        else:
+            print(f"Master flat {flat_bands_map[band]} not found for {band}, skipping flat-field correction.")
 
-# Function to plot reduced FITS data with a colorbar
-def plot_reduced_data_with_colorbar(reduced_data, title):
-    if reduced_data is not None and len(reduced_data) > 0:
-        median_image = np.median(reduced_data, axis=0) # We take the median image of the reduced data list
-        plt.figure(figsize=(10, 8))
-        plt.imshow(median_image, cmap='viridis', origin='lower',
-                   norm=colors.LogNorm(vmin=np.percentile(median_image, 5), vmax=np.percentile(median_image, 95)))
-        
-        plt.colorbar(label='Pixel Value')
-        plt.title(title)
-        plt.xlabel('X Pixel')
-        plt.ylabel('Y Pixel')
-        plt.show()
-    else:
-        print(f"No valid data to plot for {title}")
+        # Append the processed data into the list for stacking later
+        processed_data[obj_name][band].extend(fits_data[obj_name][band])
 
+# After processing all the data, calculate the mean and save the stacked image
+for obj_name in processed_data:
+    for band in processed_data[obj_name]:
+        if len(processed_data[obj_name][band]) > 0:
 
-plot_reduced_data_with_colorbar(fits_data['M52']['B-band'], 'M52 B-band Reduced Data') #Second variable is the title
+            stacked_image = np.mean(processed_data[obj_name][band], axis=0)
+
+            # Save the stacked image
+            reduced_image_filename = f"Reduced_Stacked_Image_{obj_name}_{band.replace('-', '_')}.fits"
+            reduced_image_path = os.path.join(reduced_image_dir, reduced_image_filename)
+            
+            # Save the stacked image to a FITS file
+            hdu = fits.PrimaryHDU(stacked_image)
+            hdu.writeto(reduced_image_path, overwrite=True)
+            print(f"Saved reduced stacked image for {obj_name} {band} as {reduced_image_filename} in {reduced_image_dir}.")
+        else:
+            print(f"No valid data to stack for {obj_name} {band}, skipping saving.")
