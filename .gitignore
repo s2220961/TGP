@@ -1,5 +1,9 @@
 # This line of code ignore everything in `Name_of_folder_containing_data_of_observation`
 observation_data/
+data_reduction/
+test.py/
+test2.py/
+test3.py/
 
 
 # Ignore .env file
