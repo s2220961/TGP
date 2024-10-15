@@ -1,10 +1,24 @@
-import os
+#Read Fits files
+
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
 from astropy.io import fits
-from matplotlib import ticker
-from Main import fits_data # Import fits_data from Main.py
+import matplotlib.patches as mpatches
+import scipy as scipy
+import os
+
+# Have a look at README.MD before replacing the base_dir to make sure your folder has the same structure. This code is built for only that kind of structure
+# This gives the directory to your data folder. Please replace it with your own folder directory
+base_dir = 'G:\MyProject\TGP\observation_data'
+
+
+fits_data = {
+    'Calibration': {},
+    'M52': {'B-band': [], 'U-band': [], 'V-band': []},
+    'NGC7789': {'B-band': [], 'U-band': [], 'V-band': []},
+    'Standard Star 1': {'B-band': [], 'U-band': [], 'V-band': []},
+    'Standard Star 2': {'B-band': [], 'U-band': [], 'V-band': []}
+}
 
 # Function to read FITS files from a given directory and add data to a list
 def load_fits_files(directory):
@@ -16,67 +30,41 @@ def load_fits_files(directory):
             fits_files.append(data)
     return fits_files
 
-# Function to normalize a flat field frame
-def normalize_flat(flat_data):
-    mean_value = np.mean(flat_data)
-    if mean_value == 0:
-        print("Warning: Mean value of flat data is 0, normalization skipped.")
-        return flat_data  # Return unnormalized data
-    normalized_flat = flat_data / mean_value
-    return normalized_flat
+# Load Calibration data for Bias, Dark, and Flats
+for cal_type in ['Bias', 'Dark', 'Flats']:
+    dir_path = os.path.join(base_dir, 'Calibration', cal_type)
 
-# Function to process and stack flat frames from a list of file paths and save master flats
-def process_flats_and_save(flat_files, output_file):
-    normalized_flats = []
-    for flat_data in flat_files:
-        print(f"Processing flat data.")
-        normalized_flat = normalize_flat(flat_data)
-        normalized_flats.append(normalized_flat)
-    
-    if not normalized_flats:
-        print("No valid flats were processed.")
-        return None
-
-    master_flat = np.median(normalized_flats, axis=0)
-    
-    output_dir = os.path.dirname(output_file)
-    if not os.path.exists(output_dir):
-        try:
-            os.makedirs(output_dir)
-            print(f"Created directory: {output_dir}")
-        except OSError as e:
-            print(f"Error creating directory {output_dir}: {e}")
-            return
-            
-    try:
-        hdu = fits.PrimaryHDU(master_flat)
-        hdu.writeto(output_file, overwrite=True)
-        print(f"Master flat saved to: {output_file}")
-    except Exception as e:
-        print(f"Error saving file {output_file}: {e}")
-    return master_flat  # Return the master flat for plotting
-
-# Function to plot the master flat with enhanced contrast and color scaling
-def plot_master_flat(master_flat, title):
-    if master_flat is not None:
-        plt.imshow(master_flat, cmap='hot', origin='lower',
-                   norm=colors.LogNorm(vmin=np.percentile(master_flat, 5), vmax=np.percentile(master_flat, 95)))
-        plt.colorbar(format='%.2f')
-        plt.title(title)
-        plt.gca().xaxis.set_major_formatter(ticker.ScalarFormatter(useOffset=False))
-        plt.gca().yaxis.set_major_formatter(ticker.ScalarFormatter(useOffset=False))
-        plt.gca().ticklabel_format(style='plain', axis='both')
-        plt.show()
+    if cal_type == 'Flats':
+        flats_subfolders = ['B-Band', 'U-Band', 'V-Band']
+        fits_data['Calibration']['Flats'] = {}  
+        for subfolder in flats_subfolders:
+            subfolder_path = os.path.join(dir_path, subfolder)
+            fits_data['Calibration']['Flats'][subfolder] = load_fits_files(subfolder_path)
     else:
-        print(f"No master flat to plot for {title}")
+        fits_data['Calibration'][cal_type] = load_fits_files(dir_path)
 
-# Process and save master flats for each filter
-def create_and_plot_master_flats():
-    output_base_dir = 'G:\\MyProject\\TGP\\data_reduction\\Flats\\Master'
-    for filter_name, flat_data in fits_data['Calibration']['Flats'].items():
-        output_path = os.path.join(output_base_dir, f'Master_Flat_{filter_name}.fits')
-        master_flat = process_flats_and_save(flat_data, output_path)
-        plot_master_flat(master_flat, f'Master Flat for {filter_name} Band')
+# Load data for M52, NGC7789
+for obj_name in ['M52', 'NGC7789']:
+    for band in ['B-band', 'U-band', 'V-band']:
+        dir_path = os.path.join(base_dir, obj_name, band)
+        fits_data[obj_name][band] = load_fits_files(dir_path)
 
-'''Please uncomment the code below to run the plot. I put a comment on the code below because Idont want it to run when I run the script'''
-# create_and_plot_master_flats()
+# Load data for Standard Star 1 and 2
+for star in ['Standard Star 1', 'Standard Star 2']:
+    for band in ['B-band', 'U-band', 'V-band']:
+        fits_data[star][band] = []
+        for observation in ['First observation', 'Second observation', 'Third observation']:
+            dir_path = os.path.join(base_dir, star, band, observation)
+            fits_data[star][band].extend(load_fits_files(dir_path))
+
+
+
+# Example on how to fetch the data . In this example, I want to fecth the first data in V-band for M52 and Flats B-Band
+# m52_b_band_data = fits_data['M52']['B-band']
+# print(m52_b_band_data)
+
+# flats_b_band_data = fits_data['Calibration']['Flats']['B-Band'][5]
+# print(flats_b_band_data)
+
+# m52_v_band_data = fits_data['M52']['V-band'][0]
+# print(m52_v_band_data)
