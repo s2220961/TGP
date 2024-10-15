@@ -35,7 +35,7 @@ for cal_type in ['Bias', 'Dark', 'Flats']:
     dir_path = os.path.join(base_dir, 'Calibration', cal_type)
 
     if cal_type == 'Flats':
-        flats_subfolders = ['B-Band', 'Halpha', 'OIII', 'R-Band', 'SII', 'V-Band']
+        flats_subfolders = ['B-Band', 'U-Band', 'V-Band']
         fits_data['Calibration']['Flats'] = {}  
         for subfolder in flats_subfolders:
             subfolder_path = os.path.join(dir_path, subfolder)
@@ -65,3 +65,6 @@ for star in ['Standard Star 1', 'Standard Star 2']:
 
 # flats_b_band_data = fits_data['Calibration']['Flats']['B-Band'][5]
 # print(flats_b_band_data)
+
+# m52_v_band_data = fits_data['M52']['V-band'][0]
+# print(m52_v_band_data)
