@@ -11,6 +11,7 @@ import os
 # This gives the directory to your data folder. Please replace it with your own folder directory
 base_dir = 'G:\MyProject\TGP\observation_data'
 
+
 fits_data = {
     'Calibration': {},
     'M52': {'B-band': [], 'U-band': [], 'V-band': []},
@@ -29,10 +30,18 @@ def load_fits_files(directory):
             fits_files.append(data)
     return fits_files
 
-# Load Calibration data
+# Load Calibration data for Bias, Dark, and Flats
 for cal_type in ['Bias', 'Dark', 'Flats']:
     dir_path = os.path.join(base_dir, 'Calibration', cal_type)
-    fits_data['Calibration'][cal_type] = load_fits_files(dir_path)
+
+    if cal_type == 'Flats':
+        flats_subfolders = ['B-Band', 'U-Band', 'V-Band']
+        fits_data['Calibration']['Flats'] = {}  
+        for subfolder in flats_subfolders:
+            subfolder_path = os.path.join(dir_path, subfolder)
+            fits_data['Calibration']['Flats'][subfolder] = load_fits_files(subfolder_path)
+    else:
+        fits_data['Calibration'][cal_type] = load_fits_files(dir_path)
 
 # Load data for M52, NGC7789
 for obj_name in ['M52', 'NGC7789']:
@@ -49,6 +58,13 @@ for star in ['Standard Star 1', 'Standard Star 2']:
             fits_data[star][band].extend(load_fits_files(dir_path))
 
 
-#Example on how to fetch the data . In this example, I want to fecth the first data in V-band for M52
-m52_v_band_data = fits_data['M52']['V-band'][0]
-print(m52_v_band_data)
+
+# Example on how to fetch the data . In this example, I want to fecth the first data in V-band for M52 and Flats B-Band
+# m52_b_band_data = fits_data['M52']['B-band']
+# print(m52_b_band_data)
+
+# flats_b_band_data = fits_data['Calibration']['Flats']['B-Band'][5]
+# print(flats_b_band_data)
+
+# m52_v_band_data = fits_data['M52']['V-band'][0]
+# print(m52_v_band_data)
