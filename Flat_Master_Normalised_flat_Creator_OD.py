@@ -5,13 +5,14 @@ import matplotlib.colors as colors
 from astropy.io import fits
 from matplotlib import ticker
 from Main import Flats  # Import the Flats arrays from Main.py
-from Bias_Master import master_bias  # Import the master_bias from Bias_Master.py
 
-# Function to subtract the master bias from flat data
+master_bias_path = 'G:\\MyProject\\TGP\\data_reduction\\Master_Bias\\master_bias.fits'
+with fits.open(master_bias_path) as hdul:
+    master_bias = hdul[0].data
+    
 def subtract_bias(flat_data, master_bias):
     return flat_data - master_bias
 
-# Function to normalize a flat field frame
 def normalize_flat(flat_data):
     mean_value = np.mean(flat_data)
     if mean_value == 0:
@@ -20,7 +21,6 @@ def normalize_flat(flat_data):
     normalized_flat = flat_data / mean_value
     return normalized_flat
 
-# Function to process and stack flat frames from a list of file paths and save master flats
 def process_flats_and_save(flat_files, output_file, master_bias):
     normalized_flats = []
     for flat_data in flat_files:
@@ -32,8 +32,7 @@ def process_flats_and_save(flat_files, output_file, master_bias):
         print("No valid flats were processed.")
         return None
 
-    # Stack the normalized flats to create the master flat
-    master_flat = np.median(normalized_flats, axis=0) 
+    master_flat = np.mean(normalized_flats, axis=0) 
 
     # Save the master flat
     output_dir = os.path.dirname(output_file)
@@ -54,7 +53,6 @@ def process_flats_and_save(flat_files, output_file, master_bias):
     
     return master_flat 
 
-# Function to plot the master flat
 def plot_master_flat(master_flat, title):
     if master_flat is not None:
         plt.imshow(master_flat, cmap='hot', origin='lower',
@@ -68,14 +66,12 @@ def plot_master_flat(master_flat, title):
     else:
         print(f"No master flat to plot for {title}")
 
-# Process and save master flats for each filter
 def create_and_plot_master_flats():
     output_base_dir = 'G:\\MyProject\\TGP\\data_reduction\\Flats\\Master'
     for filter_name, flat_data in Flats.items():
         output_path = os.path.join(output_base_dir, f'Master_Flat_{filter_name}.fits')
         master_flat = process_flats_and_save(flat_data, output_path, master_bias)
-        plot_master_flat(master_flat, f'Master Flat for {filter_name} Band')
+        plot_master_flat(master_flat, f'Master Flat for {filter_name} Band')      #Please uncomment the code to to run the plot. I put a comment on the code below because I don't want it to run when I run the script
 
 
-'''Please uncomment the code below to run the plot. I put a comment on the code below because Idont want it to run when I run the script'''
-# create_and_plot_master_flats()
+create_and_plot_master_flats()
