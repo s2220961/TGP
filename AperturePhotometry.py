@@ -39,10 +39,6 @@ for reduced_image_path in reduced_image_paths:
                 print(f"No sources found in {reduced_image_path}")
                 continue
 
-            # Sort sources by flux and select top 500
-            sources.sort('flux', reverse=True)
-            sources = sources[:500]
-
             positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
 
             # Define apertures with a consistent set of positions and variable radii
