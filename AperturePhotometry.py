@@ -78,4 +78,8 @@ for reduced_image_path in reduced_image_paths:
             plt.title(f"Aperture Photometry on {os.path.basename(reduced_image_path)}")
             plt.xlabel("X Pixel")
             plt.ylabel("Y Pixel")
-            plt.show()
+
+            output_filename = os.path.splitext(os.path.basename(reduced_image_path))[0] + '_photometry.png'
+            plt.savefig(output_filename, dpi=300, bbox_inches='tight')
+            plt.close()
+            
